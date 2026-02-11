@@ -1,0 +1,317 @@
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #f0f4f8;
+    --accent-color: #2c3e50;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --white: #ffffff;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--accent-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    width: 90%;
+    max-width: 600px;
+}
+
+/* Sections */
+.hidden-section {
+    display: none;
+}
+
+/* Form Styles */
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 1rem;
+    /* Plus grand pour mobile */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Buttons */
+button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    padding: 1rem 1.5rem;
+    /* Boutons plus grands */
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color var(--transition-speed);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #e2e6ea;
+    color: var(--accent-color);
+}
+
+.btn-secondary:hover {
+    background-color: #dbe2ef;
+}
+
+/* Quiz Section */
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+    background-color: #e9ecef;
+    height: 10px;
+    /* Un peu plus épais */
+    border-radius: 5px;
+    flex-grow: 1;
+    margin-right: 1rem;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background-color: var(--primary-color);
+    height: 100%;
+    width: 0%;
+    transition: width var(--transition-speed);
+}
+
+.question-count {
+    font-size: 0.9rem;
+    color: #6c757d;
+    white-space: nowrap;
+}
+
+.question-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* Espace plus grand entre les options */
+}
+
+.option-btn {
+    background-color: var(--secondary-color);
+    border: 2px solid transparent;
+    padding: 1.2rem;
+    /* Zone de clic agrandie */
+    border-radius: 8px;
+    text-align: left;
+    transition: all 0.2s;
+    cursor: pointer;
+    font-size: 1rem;
+    position: relative;
+    /* Pour effets futurs si besoin */
+}
+
+.option-btn:hover {
+    background-color: #e2e6ea;
+    border-color: #ced4da;
+}
+
+.option-btn:active {
+    transform: scale(0.98);
+    /* Feedback tactile */
+}
+
+.option-btn.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(0, 123, 255, 0.05);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.quiz-controls {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.quiz-controls button {
+    flex: 1;
+    /* Boutons partagent l'espace */
+}
+
+/* Results Section */
+.score-card {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.score-circle {
+    width: 140px;
+    /* Plus grand */
+    height: 140px;
+    background: conic-gradient(var(--primary-color) 0%, #e9ecef 0%);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.score-circle::before {
+    content: '';
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    background-color: var(--white);
+    border-radius: 50%;
+}
+
+.score-circle span {
+    position: relative;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.status-message {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--success-color);
+    background-color: #e6fffa;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #b2f5ea;
+}
+
+#answers-review {
+    max-height: 40vh;
+    /* Hauteur relative à l'écran */
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    background-color: #fafafa;
+}
+
+.review-item {
+    margin-bottom: 1.2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.review-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.review-correct {
+    color: var(--success-color);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.review-incorrect {
+    color: var(--error-color);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.explanation {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 0.4rem;
+    font-style: italic;
+    background-color: #fff;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 600px) {
+    body {
+        align-items: flex-start;
+        /* Permet le scroll sur petits écrans verticaux */
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .container {
+        padding: 1.2rem;
+        width: 100%;
+        border-radius: 0;
+        /* Plein écran sur mobile */
+        box-shadow: none;
+        max-width: none;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .quiz-controls {
+        flex-direction: row;
+        /* Garder côte à côte mais avec flex:1 deja mis */
+    }
+
+    .option-btn {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .question-card h2 {
+        font-size: 1.1rem;
+    }
+}

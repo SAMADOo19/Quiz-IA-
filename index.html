@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Workshop1</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts pour un look moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Inclusion de la librarie EmailJS au cas où l'utilisateur voudrait l'activer -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Section d'accueil / Formulaire -->
+        <section id="welcome-section" class="active-section">
+            <h1>Workshop IA </h1>
+            <p>Cyber Nexus</p>
+            
+            <form id="user-form">
+                <div class="form-group">
+                    <label for="username">Nom complet</label>
+                    <input type="text" id="username" placeholder="Votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Adresse Email</label>
+                    <input type="email" id="email" placeholder="votre@email.com" required>
+                </div>
+                <button type="submit" class="btn-primary">Commencer le Quiz</button>
+            </form>
+        </section>
+
+        <!-- Section du Quiz -->
+        <section id="quiz-section" class="hidden-section">
+            <header class="quiz-header">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="question-count">Question <span id="current-q-num">1</span> sur 11</div>
+            </header>
+            
+            <div id="question-container" class="question-card">
+                <!-- La question et les options seront injectées ici par JS -->
+            </div>
+
+            <div class="quiz-controls">
+                <button id="prev-btn" class="btn-secondary" disabled>Précédent</button>
+                <button id="next-btn" class="btn-primary">Suivant</button>
+            </div>
+        </section>
+
+        <!-- Section des Résultats -->
+        <section id="result-section" class="hidden-section">
+            <h2>Résultats du Quiz </h2>
+            <div class="score-card">
+                <div class="score-circle">
+                    <span id="score-percent">0%</span>
+                </div>
+                <p>Vous avez obtenu <span id="score-text">0/11</span> bonnes réponses.</p>
+                <p id="email-status" class="status-message"></p>
+            </div>
+
+            <div id="answers-review">
+                <!-- Le récapitulatif des réponses sera injecté ici -->
+            </div>
+
+            <button id="restart-btn" class="btn-secondary">Recommencer</button>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
