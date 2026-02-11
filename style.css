@@ -122,6 +122,10 @@ body::before {
     animation: fadeInUp 0.6s ease-out;
 }
 
+#welcome-section {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
 /* Form Styles */
 h1 {
     background: linear-gradient(135deg, var(--gradient-start), var(--secondary-color));
