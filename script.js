@@ -281,60 +281,41 @@ function finishQuiz() {
     sendResults(score, percent);
 }
 
-// Simulation d'envoi d'email
+// Envoi des résultats (Via Client Mail pour garantir la réception)
 function sendResults(score, percent) {
     const { name, email } = currentState.userInfo;
     const adminEmail = "mcboosabdo@gmail.com";
 
-    // Logique pour l'email au participant
-    const userMessage = {
-        name: name,
-        email: email,
-        score: `${score}/${quizData.length}`,
-        percentage: `${percent}%`
-    };
+    // Construction du lien mailto
+    const subject = encodeURIComponent(`Résultat Quiz IA - ${name}`);
+    const body = encodeURIComponent(`
+Nom du participant : ${name}
+Email du participant : ${email}
+Score obtenu : ${score}
+Pourcentage : ${percent}
 
-    // Logique pour l'email à l'admin
-    const adminMessage = {
-        adminEmail: adminEmail,
-        participantName: name,
-        participantEmail: email,
-        participantScore: userMessage.score,
-        participantPercent: userMessage.percentage
-    };
+(Ce message est généré automatiquement après le quiz Workshop1)
+    `);
 
-    // Si EmailJS était configuré, nous appellerions :
-    // emailjs.send(serviceID, templateID, params)...
+    const mailtoLink = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
 
-    // Simulation
-    simulateEmailProcess(userMessage, adminMessage);
-}
+    // Mise à jour de l'interface
+    dom.emailStatus.style.display = 'block';
+    dom.emailStatus.innerHTML = `
+        <div style="margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
+            <p style="margin: 0 0 10px 0; color: #1565c0; font-weight: bold;">
+                Pour valider vos résultats, veuillez cliquer ci-dessous :
+            </p>
+            <a href="${mailtoLink}" class="btn-primary" style="display: inline-block; padding: 10px 20px; text-decoration: none; text-align: center; color: white;">
+                📧 Envoyer Rapport (${score}/${quizData.length})
+            </a>
+            <p style="font-size: 0.8em; color: #666; margin-top: 10px;">
+                Cela ouvrira votre application de messagerie (Gmail, Outlook...) pour envoyer votre score à ${adminEmail}.
+            </p>
+        </div>
+    `;
 
-function simulateEmailProcess(userMsg, adminMsg) {
-    dom.emailStatus.textContent = "Traitement des résultats et envoi des notifications...";
-
-    setTimeout(() => {
-        // Confirmation visuelle
-        dom.emailStatus.innerHTML = `
-            Résultats calculés avec succès !<br>
-        `;
-        dom.emailStatus.classList.add('status-message'); // Assure le style
-
-        // Logs console pour montrer que l'action a eu lieu
-        console.group(" ");
-        console.log(`[USER EMAIL] To: ${userMsg.email} | Content: Bravo ${userMsg.name}, Score: ${userMsg.percentage}`);
-        console.log(`  Le participant ${userMsg.participantName} a obtenu ${userMsg.participantPercent}`);
-        console.groupEnd();
-
-        // Sauvegarde locale pour persistance basique
-        const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
-        history.push({
-            date: new Date().toISOString(),
-            ...adminMsg
-        });
-        localStorage.setItem('quizHistory', JSON.stringify(history));
-
-    }, 2000);
+    console.log("Lien mailto généré.");
 }
 
 // Réinitialiser le quiz
