@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Workshop1</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts pour un look moderne -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Inclusion de la librarie EmailJS au cas où l'utilisateur voudrait l'activer -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
     <div class="container">
@@ -17,7 +16,7 @@
         <section id="welcome-section" class="active-section">
             <h1>Workshop IA </h1>
             <p>Cyber Nexus</p>
-            
+
             <form id="user-form">
                 <div class="form-group">
                     <label for="username">Nom complet</label>
@@ -39,7 +38,7 @@
                 </div>
                 <div class="question-count">Question <span id="current-q-num">1</span> sur 11</div>
             </header>
-            
+
             <div id="question-container" class="question-card">
                 <!-- La question et les options seront injectées ici par JS -->
             </div>
@@ -65,10 +64,18 @@
                 <!-- Le récapitulatif des réponses sera injecté ici -->
             </div>
 
+            <div class="leaderboard-section">
+                <h3>Classement des Participants</h3>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <!-- Les résultats seront injectés ici -->
+                </div>
+            </div>
+
             <button id="restart-btn" class="btn-secondary">Recommencer</button>
         </section>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
