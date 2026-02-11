@@ -1,8 +1,7 @@
 // Configuration des questions du quiz
-// Les réponses sont mélangées pour ne pas toujours être la première option.
 const quizData = [
     {
-        question: "Qu’est-ce que l’Intelligence Artificielle ?",
+        question: "Qu'est-ce que l'Intelligence Artificielle ?",
         options: [
             "Une technologie pour simuler l'intelligence humaine",
             "Un type d'ordinateur",
@@ -127,7 +126,7 @@ const quizData = [
 // État de l'application
 let currentState = {
     currentQuestionIndex: 0,
-    userAnswers: new Array(quizData.length).fill(null), // Stocke l'index de la réponse choisie
+    userAnswers: new Array(quizData.length).fill(null),
     userInfo: {
         name: '',
         email: ''
@@ -151,7 +150,8 @@ const dom = {
     scoreText: document.getElementById('score-text'),
     answersReview: document.getElementById('answers-review'),
     emailStatus: document.getElementById('email-status'),
-    restartBtn: document.getElementById('restart-btn')
+    restartBtn: document.getElementById('restart-btn'),
+    leaderboardList: document.getElementById('leaderboard-list')
 };
 
 // Initialisation
@@ -165,19 +165,14 @@ function init() {
 // Démarrer le quiz
 function startQuiz(e) {
     e.preventDefault();
-
-    // Récupérer les infos utilisateur
     const name = dom.usernameInput.value.trim();
     const email = dom.emailInput.value.trim();
 
     if (name && email) {
         currentState.userInfo.name = name;
         currentState.userInfo.email = email;
-
-        // Transition vers la section quiz
         dom.welcomeSection.classList.add('hidden-section');
         dom.quizSection.classList.remove('hidden-section');
-
         renderQuestion();
     }
 }
@@ -185,13 +180,10 @@ function startQuiz(e) {
 // Afficher la question courante
 function renderQuestion() {
     const questionData = quizData[currentState.currentQuestionIndex];
-
-    // Mettre à jour la barre de progression
     const progress = ((currentState.currentQuestionIndex + 1) / quizData.length) * 100;
     dom.progressFill.style.width = `${progress}%`;
     dom.currentQNum.textContent = currentState.currentQuestionIndex + 1;
 
-    // Générer le HTML de la question
     let optionsHtml = '';
     questionData.options.forEach((option, index) => {
         const isSelected = currentState.userAnswers[currentState.currentQuestionIndex] === index;
@@ -209,7 +201,6 @@ function renderQuestion() {
         </div>
     `;
 
-    // Gérer l'état des boutons navigation
     dom.prevBtn.disabled = currentState.currentQuestionIndex === 0;
     dom.nextBtn.textContent = currentState.currentQuestionIndex === quizData.length - 1 ? 'Terminer' : 'Suivant';
 }
@@ -217,17 +208,15 @@ function renderQuestion() {
 // Sélectionner une option
 window.selectOption = function (optionIndex) {
     currentState.userAnswers[currentState.currentQuestionIndex] = optionIndex;
-    renderQuestion(); // Re-render pour mettre à jour la classe 'selected'
+    renderQuestion();
 };
 
-// Navigation : Suivant
+// Navigation
 function handleNext() {
-    // Vérifier si une réponse est sélectionnée
     if (currentState.userAnswers[currentState.currentQuestionIndex] === null) {
         alert("Veuillez sélectionner une réponse avant de continuer.");
         return;
     }
-
     if (currentState.currentQuestionIndex < quizData.length - 1) {
         currentState.currentQuestionIndex++;
         renderQuestion();
@@ -236,7 +225,6 @@ function handleNext() {
     }
 }
 
-// Navigation : Précédent
 function handlePrev() {
     if (currentState.currentQuestionIndex > 0) {
         currentState.currentQuestionIndex--;
@@ -244,7 +232,7 @@ function handlePrev() {
     }
 }
 
-// Fin du quiz et calcul des résultats
+// Fin du quiz
 function finishQuiz() {
     let score = 0;
     let reviewHtml = '';
@@ -252,14 +240,13 @@ function finishQuiz() {
     currentState.userAnswers.forEach((answer, index) => {
         const question = quizData[index];
         const isCorrect = answer === question.correct;
-
         if (isCorrect) score++;
 
         reviewHtml += `
             <div class="review-item">
                 <div class="review-title">${index + 1}. ${question.question}</div>
                 <div class="${isCorrect ? 'review-correct' : 'review-incorrect'}">
-                    Votre réponse : ${question.options[answer]} ${isCorrect ? 'T' : 'F'}
+                    Votre réponse : ${question.options[answer]} ${isCorrect ? '✓' : '✗'}
                 </div>
                 ${!isCorrect ? `<div class="review-correct">Bonne réponse : ${question.options[question.correct]}</div>` : ''}
                 <div class="explanation">${question.explanation}</div>
@@ -269,65 +256,85 @@ function finishQuiz() {
 
     const percent = Math.round((score / quizData.length) * 100);
 
-    // Affichage
     dom.scoreText.textContent = `${score}/${quizData.length}`;
     dom.scorePercent.textContent = `${percent}%`;
-    dom.scorePercent.parentNode.style.background = `conic-gradient(var(--primary-color) ${percent}%, #e9ecef ${percent}%)`;
+    dom.scorePercent.parentNode.style.background = `conic-gradient(var(--gradient-start) ${percent}%, #e9ecef ${percent}%)`;
     dom.answersReview.innerHTML = reviewHtml;
 
     dom.quizSection.classList.add('hidden-section');
     dom.resultSection.classList.remove('hidden-section');
 
-    sendResults(score, percent);
-}
+    // Sauvegarder le résultat localement
+    saveResultToLocalStorage(score, percent);
 
-// Envoi des résultats (Via Client Mail pour garantir la réception)
-function sendResults(score, percent) {
-    const { name, email } = currentState.userInfo;
-    const adminEmail = "mcboosabdo@gmail.com";
+    // Afficher le classement
+    displayLeaderboard();
 
-    // Construction du lien mailto
-    const subject = encodeURIComponent(`Résultat Quiz IA - ${name}`);
-    const body = encodeURIComponent(`
-Nom du participant : ${name}
-Email du participant : ${email}
-Score obtenu : ${score}
-Pourcentage : ${percent}
-
-(Ce message est généré automatiquement après le quiz Workshop1)
-    `);
-
-    const mailtoLink = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
-
-    // Mise à jour de l'interface
+    // Afficher un message de confirmation
     dom.emailStatus.style.display = 'block';
     dom.emailStatus.innerHTML = `
-        <div style="margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 8px; border: 1px solid #90caf9;">
-            <p style="margin: 0 0 10px 0; color: #1565c0; font-weight: bold;">
-                Pour valider vos résultats, veuillez cliquer ci-dessous :
-            </p>
-            <a href="${mailtoLink}" class="btn-primary" style="display: inline-block; padding: 10px 20px; text-decoration: none; text-align: center; color: white;">
-                📧 Envoyer Rapport (${score}/${quizData.length})
-            </a>
-            <p style="font-size: 0.8em; color: #666; margin-top: 10px;">
-                Cela ouvrira votre application de messagerie (Gmail, Outlook...) pour envoyer votre score à ${adminEmail}.
-            </p>
+        <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.1)); color: var(--success-color); padding: 1rem; border-radius: 12px; border: 2px solid rgba(16, 185, 129, 0.3);">
+            ✅ Votre résultat a été enregistré avec succès !
         </div>
     `;
-
-    console.log("Lien mailto généré.");
 }
 
-// Réinitialiser le quiz
+// Sauvegarder le résultat dans localStorage
+function saveResultToLocalStorage(score, percent) {
+    const { name, email } = currentState.userInfo;
+
+    // Récupérer les résultats existants
+    let results = JSON.parse(localStorage.getItem('quizResults')) || [];
+
+    // Ajouter le nouveau résultat
+    const newResult = {
+        name: name,
+        email: email,
+        score: score,
+        total: quizData.length,
+        percent: percent,
+        date: new Date().toISOString()
+    };
+
+    results.push(newResult);
+
+    // Sauvegarder dans localStorage
+    localStorage.setItem('quizResults', JSON.stringify(results));
+}
+
+// Afficher le classement
+function displayLeaderboard() {
+    const results = JSON.parse(localStorage.getItem('quizResults')) || [];
+
+    if (results.length === 0) {
+        dom.leaderboardList.innerHTML = '<div class="no-results">Aucun résultat pour le moment</div>';
+        return;
+    }
+
+    // Trier par score décroissant
+    results.sort((a, b) => b.percent - a.percent);
+
+    let leaderboardHtml = '';
+    results.forEach((result, index) => {
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+        leaderboardHtml += `
+            <div class="leaderboard-item">
+                <div class="leaderboard-rank">${medal}</div>
+                <div class="leaderboard-name">${result.name}</div>
+                <div class="leaderboard-score">${result.score}/${result.total}</div>
+            </div>
+        `;
+    });
+
+    dom.leaderboardList.innerHTML = leaderboardHtml;
+}
+
 function resetQuiz() {
     currentState.currentQuestionIndex = 0;
     currentState.userAnswers = new Array(quizData.length).fill(null);
-    // On garde les infos utilisateur pour éviter de les redemander
-
     dom.resultSection.classList.add('hidden-section');
     dom.quizSection.classList.remove('hidden-section');
     renderQuestion();
 }
 
-// Lancer l'initialisation au chargement
 document.addEventListener('DOMContentLoaded', init);

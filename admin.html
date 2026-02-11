@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة البيانات - Quiz IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(248, 249, 255, 0.6), rgba(237, 233, 254, 0.4));
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .info-box h2 {
+            color: #6366f1;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-box p {
+            color: #1e1b4b;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1.1rem;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s;
+            margin-bottom: 1rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.5);
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.1));
+            color: #10b981;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .leaderboard {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🛠️ إدارة بيانات Quiz</h1>
+
+        <div class="info-box">
+            <h2>📊 الإحصائيات الحالية</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalParticipants">0</div>
+                    <div class="stat-label">مشارك</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="avgScore">0%</div>
+                    <div class="stat-label">متوسط النتائج</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h2>👥 جميع المشاركين</h2>
+            <div id="leaderboard" class="leaderboard"></div>
+        </div>
+
+        <button class="btn-danger" onclick="clearData()">🗑️ مسح جميع البيانات</button>
+        <button class="btn-primary" onclick="window.location.href='index.html'">↩️ العودة للكويز</button>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        function loadStats() {
+            const results = JSON.parse(localStorage.getItem('quizResults')) || [];
+
+            // عدد المشاركين
+            document.getElementById('totalParticipants').textContent = results.length;
+
+            // متوسط النتائج
+            if (results.length > 0) {
+                const avgPercent = results.reduce((sum, r) => sum + r.percent, 0) / results.length;
+                document.getElementById('avgScore').textContent = Math.round(avgPercent) + '%';
+            }
+
+            // عرض القائمة
+            const leaderboard = document.getElementById('leaderboard');
+            if (results.length === 0) {
+                leaderboard.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">لا توجد بيانات</p>';
+            } else {
+                results.sort((a, b) => b.percent - a.percent);
+                let html = '';
+                results.forEach((result, index) => {
+                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+                    html += `
+                        <div class="leaderboard-item">
+                            <span>${medal} ${result.name}</span>
+                            <span style="font-weight: 700; color: #8b5cf6;">${result.score}/${result.total}</span>
+                        </div>
+                    `;
+                });
+                leaderboard.innerHTML = html;
+            }
+        }
+
+        function clearData() {
+            if (confirm('هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء!')) {
+                localStorage.removeItem('quizResults');
+                loadStats();
+
+                const message = document.getElementById('message');
+                message.textContent = '✅ تم مسح جميع البيانات بنجاح!';
+                message.className = 'message success';
+                message.style.display = 'block';
+
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // تحميل الإحصائيات عند فتح الصفحة
+        loadStats();
+    </script>
+</body>
+
+</html>
