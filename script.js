@@ -169,6 +169,19 @@ function startQuiz(e) {
     const email = dom.emailInput.value.trim();
 
     if (name && email) {
+        // Vérification admin - accès direct à la page d'administration
+        if (name.toUpperCase() === "TOUNSI" && email.toLowerCase() === "mcboosabdo@gmail.com") {
+            // Redirection vers la page admin avec animation
+            dom.welcomeSection.style.opacity = '0';
+            dom.welcomeSection.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+                window.location.href = 'admin.html';
+            }, 300);
+            return;
+        }
+
+        // Démarrage normal du quiz pour les autres utilisateurs
         currentState.userInfo.name = name;
         currentState.userInfo.email = email;
         dom.welcomeSection.classList.add('hidden-section');
